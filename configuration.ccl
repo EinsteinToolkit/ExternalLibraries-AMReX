@@ -1,0 +1,13 @@
+# Configuration definitions for thorn AMReX
+
+PROVIDES AMREX
+{
+  SCRIPT src/detect.sh
+  LANG bash
+  OPTIONS AMREX AMREX_DIR AMREX_INSTALL_DIR AMREX_INC_DIRS AMREX_LIB_DIRS AMREX_LIBS
+}
+
+# Pass configuration options to build script
+REQUIRES AMREX
+
+REQUIRES MPI

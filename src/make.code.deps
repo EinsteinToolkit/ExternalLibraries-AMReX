@@ -1,0 +1,11 @@
+# Main make.code.deps file for thorn AMReX
+
+export AMREX_ENABLE_CXX AMREX_ENABLE_FORTRAN
+export AMREX_INSTALL_DIR
+
+$(CCTK_TARGET) $(OBJS) $(SRCS:%=%.d): $(SCRATCH_BUILD)/done/$(THORN)
+
+ifneq ($(AMREX_BUILD),)
+$(SCRATCH_BUILD)/done/$(THORN): $(SRCDIR)/build.sh
+	+$(SRCDIR)/build.sh
+endif
