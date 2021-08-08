@@ -50,8 +50,6 @@ if [ -n "$AMREX_BUILD" -o -z "${AMREX_DIR}" ]; then
     check_tools "tar patch"
     
     # Set locations
-    NAME=hdf5-1.8.17
-    SRCDIR="$(dirname $0)"
     BUILD_DIR=${SCRATCH_BUILD}/build/${THORN}
     if [ -z "${AMREX_INSTALL_DIR}" ]; then
         INSTALL_DIR=${SCRATCH_BUILD}/external/${THORN}
