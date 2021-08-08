@@ -48,7 +48,9 @@ export F90FLAGS="$(echo ${MPI_INC_DIRS} | sed 's/[^ ]*/-I&/g') ${F90FLAGS}"
 export FC=${F90}
 export FFLAGS="${F90FLAGS}"
 
-./configure --prefix=${AMREX_DIR} --with-omp=${CCTK_OPENMP_MODE} --with-mpi=yes --dim=3
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_PARTICLES=ON -DENABLE_ASSERTIONS=ON -DENABLE_FORTRAN=${AMREX_ENABLE_FORTRAN} -DENABLE_OMP=ON -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
 
 echo "AMReX: Building..."
 ${MAKE}

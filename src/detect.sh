@@ -21,6 +21,11 @@ else
     AMREX_BUILD=
 fi
 
+# default value for FORTRAN support
+if [ -z "$AMREX_ENABLE_FORTRAN" ] ; then
+    AMREX_ENABLE_FORTRAN="OFF"
+fi
+
 ################################################################################
 # Decide which libraries to link with
 ################################################################################
@@ -60,7 +65,7 @@ if [ -n "$AMREX_BUILD" -o -z "${AMREX_DIR}" ]; then
     # Fortran modules may be located in the lib directory
     AMREX_INC_DIRS="${AMREX_DIR}/include ${AMREX_DIR}/lib"
     AMREX_LIB_DIRS="${AMREX_DIR}/lib"
-    AMREX_LIBS="${AMREX_CXX_LIBS} ${AMREX_FORTRAN_LIBS} ${AMREX_C_LIBS}"
+    AMREX_LIBS="amrex"
 else
     DONE_FILE=${SCRATCH_BUILD}/done/${THORN}
     if [ ! -e ${DONE_FILE} ]; then
@@ -87,41 +92,6 @@ fi
 ################################################################################
 
 
-# Check whether we are running on Windows
-if perl -we 'exit (`uname` =~ /^CYGWIN/)'; then
-    is_windows=0
-else
-    is_windows=1
-fi
-
-# check installed library, assume that everything is fine if we build
-if [ -z "$AMREX_BUILD" -a -n "${AMREX_DIR}" ]; then
-  # find public include file
-  H5PUBCONFFILES="H5pubconf.h H5pubconf-64.h H5pubconf-32.h"
-  for dir in $AMREX_RAW_INC_DIRS; do
-      for file in $H5PUBCONFFILES ; do
-          if [ -r "$dir/$file" ]; then
-              H5PUBCONF="$H5PUBCONF $dir/$file"
-              break
-          fi
-      done
-  done
-  if [ -z "$H5PUBCONF" ]; then
-      echo 'BEGIN MESSAGE'
-      echo 'WARNING in AMReX configuration: '
-      echo "None of $H5PUBCONFFILES found in $AMREX_RAW_INC_DIRS"
-      echo "Automatic detection of szip/zlib compression not possible"
-      echo 'END MESSAGE'
-  fi
-fi
-
-# Add the math library which might not be linked by default
-if [ $is_windows -eq 0 ]; then
-    AMREX_LIBS="$AMREX_LIBS m"
-fi
-
-
-
 ################################################################################
 # Configure Cactus
 ################################################################################
@@ -129,7 +99,6 @@ fi
 # Pass configuration options to build script
 echo "BEGIN MAKE_DEFINITION"
 echo "AMREX_BUILD          = ${AMREX_BUILD}"
-echo "AMREX_ENABLE_CXX     = ${AMREX_ENABLE_CXX}"
 echo "AMREX_ENABLE_FORTRAN = ${AMREX_ENABLE_FORTRAN}"
 echo "LIBSZ_DIR           = ${LIBSZ_DIR}"
 echo "LIBZ_DIR            = ${LIBZ_DIR}"
@@ -139,11 +108,10 @@ echo "END MAKE_DEFINITION"
 # Pass options to Cactus
 echo "BEGIN MAKE_DEFINITION"
 echo "AMREX_DIR            = ${AMREX_DIR}"
-echo "AMREX_ENABLE_CXX     = ${AMREX_ENABLE_CXX}"
 echo "AMREX_ENABLE_FORTRAN = ${AMREX_ENABLE_FORTRAN}"
 echo "AMREX_INC_DIRS       = ${AMREX_INC_DIRS} ${ZLIB_INC_DIRS}"
 echo "AMREX_LIB_DIRS       = ${AMREX_LIB_DIRS} ${ZLIB_LIB_DIRS}"
-echo "AMREX_LIBS           = ${AMREX_LIBS} ${ZLIB_LIBS}"
+echo "AMREX_LIBS           = ${AMREX_LIBS}"
 echo "END MAKE_DEFINITION"
 
 echo 'INCLUDE_DIRECTORY $(AMREX_INC_DIRS)'
