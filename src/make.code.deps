@@ -1,6 +1,6 @@
 # Main make.code.deps file for thorn AMReX
 
-export AMREX_ENABLE_FORTRAN
+export AMREX_ENABLE_FORTRAN AMREX_ENABLE_CUDA
 export AMREX_INSTALL_DIR
 export CMAKE_DIR
 
