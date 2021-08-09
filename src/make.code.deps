@@ -2,6 +2,7 @@
 
 export AMREX_ENABLE_FORTRAN
 export AMREX_INSTALL_DIR
+export CMAKE_DIR
 
 $(CCTK_TARGET) $(OBJS) $(SRCS:%=%.d): $(SCRATCH_BUILD)/done/$(THORN)
 
