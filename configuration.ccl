@@ -1,6 +1,6 @@
 # Configuration definitions for thorn AMReX
 
-PROVIDES AMREX
+PROVIDES AMReX
 {
   SCRIPT src/detect.sh
   LANG bash
@@ -8,6 +8,6 @@ PROVIDES AMREX
 }
 
 # Pass configuration options to build script
-REQUIRES AMREX
+REQUIRES AMReX
 
 REQUIRES MPI
