@@ -14,7 +14,7 @@ set -e                          # Abort on errors
 
 # Set locations
 THORN=AMReX
-NAME=amrex-21.11
+NAME=amrex-22.02
 SRCDIR="$(dirname $0)"
 BUILD_DIR=${SCRATCH_BUILD}/build/${THORN}
 if [ -z "${AMREX_INSTALL_DIR}" ]; then
