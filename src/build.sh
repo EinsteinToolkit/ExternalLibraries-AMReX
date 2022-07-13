@@ -67,7 +67,6 @@ if [ "$(echo ${AMREX_ENABLE_CUDA} | tr '[:upper:]' '[:lower:]')" = 'yes' ]; then
 else
   AMREX_GPU_OPTIONS="-DAMReX_CUDA=OFF"
 fi
-env | grep CXX
 
 
 mkdir build
