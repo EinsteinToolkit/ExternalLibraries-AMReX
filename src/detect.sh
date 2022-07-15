@@ -112,6 +112,18 @@ echo "AMREX_LIB_DIRS       = ${AMREX_LIB_DIRS}"
 echo "AMREX_LIBS           = ${AMREX_LIBS}"
 echo "END MAKE_DEFINITION"
 
+# Use CUDA compiler to compile all thorns using AMReX
+if [ "$(echo "${AMREX_ENABLE_CUDA}" | tr '[A-Z]' '[a-z]')" = 'yes' ]; then
+    echo "BEGIN MAKE_DEFINITION"
+    echo 'ifneq ($(THORN),)'
+    echo 'ifneq ($(THORN), AMReX)'
+    echo 'CXX = $(CUCC)'
+    echo 'CXXFLAGS = $(CUCCFLAGS)'
+    echo 'endif'
+    echo 'endif'
+    echo "END MAKE_DEFINITION"
+fi
+
 echo 'INCLUDE_DIRECTORY $(AMREX_INC_DIRS)'
 echo 'LIBRARY_DIRECTORY $(AMREX_LIB_DIRS)'
 echo 'LIBRARY           $(AMREX_LIBS)'
