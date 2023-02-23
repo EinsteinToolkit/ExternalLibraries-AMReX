@@ -72,6 +72,22 @@ else
     fi
 fi
 
+if [ "$(echo "${AMREX_ENABLE_CUDA}" | tr '[:upper:]' '[:lower:]')" = 'yes' ] &&
+   [ "$(echo "${AMREX_ENABLE_HIP}" | tr '[:upper:]' '[:lower:]')" = 'yes' ]; then
+    echo 'BEGIN ERROR'
+    echo 'ERROR in AMReX configuration: at most one of AMREX_ENABLE_CUDA or AMREX_ENABLE_HIP may be set.'
+    echo 'END ERROR'
+    exit 1
+fi
+
+if [ "$(echo "${AMREX_ENABLE_HIP}" | tr '[:upper:]' '[:lower:]')" = 'yes' ] &&
+   [ -z "${AMREX_AMD_ARCH}" ]; then
+    echo 'BEGIN ERROR'
+    echo 'ERROR in AMReX configuration: AMREX_ENABLE_HIP requires AMREX_AMD_ARCH to be set.'
+    echo 'END ERROR'
+    exit 1
+fi
+
 if [ -n "$AMREX_DIR" ]; then
     : ${AMREX_RAW_LIB_DIRS:="$AMREX_LIB_DIRS"}
     # Fortran modules may be located in the lib directory
@@ -97,19 +113,15 @@ fi
 # Pass configuration options to build script
 echo "BEGIN MAKE_DEFINITION"
 echo "AMREX_BUILD          = ${AMREX_BUILD}"
-echo "AMREX_ENABLE_FORTRAN = ${AMREX_ENABLE_FORTRAN}"
-echo "AMREX_ENABLE_CUDA    = ${AMREX_ENABLE_CUDA}"
-echo "AMREX_INSTALL_DIR    = ${AMREX_INSTALL_DIR}"
-echo "END MAKE_DEFINITION"
-
-# Pass options to Cactus
-echo "BEGIN MAKE_DEFINITION"
 echo "AMREX_DIR            = ${AMREX_DIR}"
 echo "AMREX_ENABLE_FORTRAN = ${AMREX_ENABLE_FORTRAN}"
 echo "AMREX_ENABLE_CUDA    = ${AMREX_ENABLE_CUDA}"
+echo "AMREX_ENABLE_HIP     = ${AMREX_ENABLE_HIP}"
+echo "AMREX_AMD_ARCH       = ${AMREX_AMD_ARCH}"
 echo "AMREX_INC_DIRS       = ${AMREX_INC_DIRS}"
 echo "AMREX_LIB_DIRS       = ${AMREX_LIB_DIRS}"
 echo "AMREX_LIBS           = ${AMREX_LIBS}"
+echo "AMREX_INSTALL_DIR    = ${AMREX_INSTALL_DIR}"
 echo "END MAKE_DEFINITION"
 
 # Use CUDA compiler to compile all thorns using AMReX
