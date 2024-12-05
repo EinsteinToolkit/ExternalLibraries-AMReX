@@ -65,7 +65,7 @@ if [ "$(echo ${AMREX_ENABLE_CUDA} | tr '[:upper:]' '[:lower:]')" = 'yes' ]; then
   #TODO: make possible to specify CUDA arch in case AMReX's auto-detect fails
   #  -DAMReX_CUDA_ARCH=75
 elif [ "$(echo ${AMREX_ENABLE_HIP} | tr '[:upper:]' '[:lower:]')" = 'yes' ]; then
-  AMREX_GPU_OPTIONS=(-DAMReX_CUDA=OFF -DAMReX_GPU_BACKEND=HIP -DCMAKE_CXX_COMPILER=${CC} -DAMReX_AMD_ARCH=${AMREX_AMD_ARCH})
+  AMREX_GPU_OPTIONS=(-DAMReX_CUDA=OFF -DAMReX_GPU_BACKEND=HIP -DCMAKE_CXX_COMPILER=${CXX} -DAMReX_AMD_ARCH=${AMREX_AMD_ARCH})
 else
   AMREX_GPU_OPTIONS="-DAMReX_CUDA=OFF -DAMReX_GPU_BACKEND=NONE"
 fi
