@@ -43,6 +43,7 @@ echo "AMReX: Configuring..."
 cd ${NAME}
 export CFLAGS="$(echo ${MPI_INC_DIRS} | sed 's/[^ ][^ ]*/-I&/g') ${CFLAGS}"
 export CXXFLAGS="$(echo ${MPI_INC_DIRS} | sed 's/[^ ][^ ]*/-I&/g') ${CXXFLAGS}"
+export CUCCFLAGS="$(echo ${MPI_INC_DIRS} | sed 's/[^ ][^ ]*/-I&/g') ${CUCCFLAGS}"
 export F90FLAGS="$(echo ${MPI_INC_DIRS} | sed 's/[^ ][^ ]*/-I&/g') ${F90FLAGS}"
 
 export FC=${F90}
