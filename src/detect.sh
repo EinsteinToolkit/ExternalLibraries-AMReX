@@ -72,10 +72,19 @@ else
     fi
 fi
 
-if [ "$(echo "${AMREX_ENABLE_CUDA}" | tr '[:upper:]' '[:lower:]')" = 'yes' ] &&
-   [ "$(echo "${AMREX_ENABLE_HIP}" | tr '[:upper:]' '[:lower:]')" = 'yes' ]; then
+AMREX_NUM_ACCELERATORS=0
+if [ "$(echo "${AMREX_ENABLE_CUDA}" | tr '[:upper:]' '[:lower:]')" = 'yes' ] ; then
+   AMREX_NUM_ACCELERATORS=$(($AMREX_NUM_ACCELERATORS + 1))
+fi
+if [ "$(echo "${AMREX_ENABLE_HIP}" | tr '[:upper:]' '[:lower:]')" = 'yes' ] ; then
+   AMREX_NUM_ACCELERATORS=$(($AMREX_NUM_ACCELERATORS + 1))
+fi
+if [ "$(echo "${AMREX_ENABLE_SYCL}" | tr '[:upper:]' '[:lower:]')" = 'yes' ] ; then
+   AMREX_NUM_ACCELERATORS=$(($AMREX_NUM_ACCELERATORS + 1))
+fi
+if [ $AMREX_NUM_ACCELERATORS -gt 1 ] ; then
     echo 'BEGIN ERROR'
-    echo 'ERROR in AMReX configuration: at most one of AMREX_ENABLE_CUDA or AMREX_ENABLE_HIP may be set.'
+    echo 'ERROR in AMReX configuration: at most one of AMREX_ENABLE_CUDA, AMREX_ENABLE_HIP, or AMREX_ENABLE_SYCL may be set.'
     echo 'END ERROR'
     exit 1
 fi
@@ -117,6 +126,7 @@ echo "AMREX_DIR            = ${AMREX_DIR}"
 echo "AMREX_ENABLE_FORTRAN = ${AMREX_ENABLE_FORTRAN}"
 echo "AMREX_ENABLE_CUDA    = ${AMREX_ENABLE_CUDA}"
 echo "AMREX_ENABLE_HIP     = ${AMREX_ENABLE_HIP}"
+echo "AMREX_ENABLE_SYCL    = ${AMREX_ENABLE_SYCL}"
 echo "AMREX_AMD_ARCH       = ${AMREX_AMD_ARCH}"
 echo "AMREX_INC_DIRS       = ${AMREX_INC_DIRS}"
 echo "AMREX_LIB_DIRS       = ${AMREX_LIB_DIRS}"
