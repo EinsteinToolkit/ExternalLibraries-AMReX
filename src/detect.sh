@@ -26,6 +26,12 @@ if [ -z "$AMREX_ENABLE_FORTRAN" ] ; then
     AMREX_ENABLE_FORTRAN="OFF"
 fi
 
+# default value for FORTRAN support
+if [ -z "$AMREX_CMAKE_CUDA_ARCHITECTURES" ] ; then
+    # OFF prevents CMake from passing architecture flags to the compiler
+    AMREX_CMAKE_CUDA_ARCHITECTURES="OFF"
+fi
+
 ################################################################################
 # Decide which libraries to link with
 ################################################################################
