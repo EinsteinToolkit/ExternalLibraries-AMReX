@@ -69,10 +69,34 @@ else
   AMREX_GPU_OPTIONS=(-DAMReX_CUDA=OFF -DAMReX_GPU_BACKEND=NONE)
 fi
 
+# CMake's FindMPI does not reliably locate an MPI installation built from
+# source by the MPI thorn (no system MPI is registered), which causes
+# find_package(MPI) to fail with e.g. "Could NOT find MPI_CXX (missing:
+# MPI_CXX_LIB_NAMES MPI_CXX_HEADER_DIR MPI_CXX_WORKS)". When the MPI thorn
+# built MPI from source (MPI_BUILD set), hint CMake at it via MPI_HOME and
+# the wrapper compilers found beneath MPI_DIR. This is a no-op for a system
+# or manually configured MPI (MPI_BUILD empty), leaving CMake's own
+# detection untouched, so it does not disrupt non-thorn MPI builds.
+MPI_C_OPTION=
+MPI_CXX_OPTION=
+MPI_Fortran_OPTION=
+if [ -n "${MPI_BUILD}" ] && [ -n "${MPI_DIR}" ] && [ -d "${MPI_DIR}" ]; then
+  export MPI_HOME="${MPI_DIR}"
+  if [ -x "${MPI_DIR}/bin/mpicc" ]; then
+    MPI_C_OPTION="-DMPI_C_COMPILER=${MPI_DIR}/bin/mpicc"
+  fi
+  if [ -x "${MPI_DIR}/bin/mpicxx" ]; then
+    MPI_CXX_OPTION="-DMPI_CXX_COMPILER=${MPI_DIR}/bin/mpicxx"
+  fi
+  if [ "${AMREX_ENABLE_FORTRAN}" = ON ] && [ -x "${MPI_DIR}/bin/mpifort" ]; then
+    MPI_Fortran_OPTION="-DMPI_Fortran_COMPILER=${MPI_DIR}/bin/mpifort"
+  fi
+  export PATH="${MPI_DIR}/bin:${PATH}"
+fi
 
 mkdir build
 cd build
-${CMAKE_DIR:+${CMAKE_DIR}/bin/}cmake -DCMAKE_BUILD_TYPE=${AMREX_BUILD_TYPE} -DAMReX_PARTICLES=ON -DAMReX_ASSERTIONS=ON -DAMReX_FORTRAN=${AMREX_ENABLE_FORTRAN} "${AMREX_GPU_OPTIONS[@]}" -DAMReX_OMP=${AMREX_ENABLE_OPENMP} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
+${CMAKE_DIR:+${CMAKE_DIR}/bin/}cmake -DCMAKE_BUILD_TYPE=${AMREX_BUILD_TYPE} -DAMReX_PARTICLES=ON -DAMReX_ASSERTIONS=ON -DAMReX_FORTRAN=${AMREX_ENABLE_FORTRAN} "${AMREX_GPU_OPTIONS[@]}" ${MPI_C_OPTION} ${MPI_CXX_OPTION} ${MPI_Fortran_OPTION} -DAMReX_OMP=${AMREX_ENABLE_OPENMP} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
 
 echo "AMReX: Building..."
 ${MAKE}
